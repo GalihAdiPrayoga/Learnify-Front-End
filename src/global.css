@@ -1,0 +1,13 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap");
+@import "toastr/build/toastr.min.css";
+@import "tailwindcss";
+
+:root {
+  --font-sans: "Nunito", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial;
+}
+
+/* set global body font */
+body {
+  font-family: var(--font-sans);
+}
