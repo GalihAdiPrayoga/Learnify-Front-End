@@ -5,8 +5,6 @@ import { kelasApi } from "@/services/api/kelas.api";
 import {
   ArrowLeft,
   ArrowRight,
-  CheckCircle,
-  Circle,
   Bookmark,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -227,7 +225,6 @@ const DetailMaterialPage = () => {
         <div className="max-w-5xl mx-auto px-6 mt-6">
           <motion.button
             onClick={handleToggleComplete}
-            whileHover={{ scale: 1.02, y: -3 }}
             whileTap={{ scale: 0.98 }}
             aria-pressed={isCompleted}
             disabled={isToggling}
