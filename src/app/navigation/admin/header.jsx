@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Settings, LogOut, ChevronDown } from "lucide-react";
 import { handleLogout } from "@/features/auth/services/AuthHandleSubmit";
-import { useHeader } from "../hooks/useHeader";
+import { useHeader } from "../../../features/admin/hooks/useHeader";
 
 export default function Header({ hasScrolled = false }) {
   const navigate = useNavigate();

@@ -11,7 +11,7 @@ import {
   SheetClose,
   SheetFooter,
 } from "@/components/ui/sheet";
-import { useEditProfile } from "../hooks/useEditProfile";
+import { useEditProfile } from "../../hooks/useEditProfile";
 
 export default function EditProfileSheet({
   open,

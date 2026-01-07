@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
-import Sidebar from "@/features/admin/components/sidebar";
-import Header from "@/features/admin/components/header";
+import Sidebar from "@/app/navigation/admin/sidebar";
+import Header from "@/app/navigation/admin/header";
 
 export default function AdminLayouts() {
   const [hasScrolled, setHasScrolled] = useState(false);

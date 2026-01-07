@@ -2,11 +2,6 @@ import React, { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { materiApi } from "../../../services/api/materi.api";
 import { kelasApi } from "@/services/api/kelas.api";
-import {
-  ArrowLeft,
-  ArrowRight,
-  Bookmark,
-} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Loading from "@/components/Loading";
 import { toast } from "react-hot-toast";
@@ -15,6 +10,11 @@ import { useMaterial } from "../hooks/useMaterial";
 import { useCourse } from "../hooks/useCourse";
 import "react-quill-new/dist/quill.snow.css";
 import Button from "@/components/button";
+
+// added imports: split components
+import MaterialContent from "../components/materials/MaterialContent";
+import MaterialCompletionToggle from "../components/materials/MaterialCompletionToggle";
+import MaterialNavigator from "../components/materials/MaterialNavigator";
 
 const DetailMaterialPage = () => {
   const { kelasId, materialId } = useParams();
@@ -83,20 +83,6 @@ const DetailMaterialPage = () => {
     }
   }, [materialId]);
 
-  /* ================= NORMALIZE HTML ================= */
-  const normalizeHtml = (raw) => {
-    if (!raw) return "";
-    let html = String(raw);
-
-    const textarea = document.createElement("textarea");
-    textarea.innerHTML = html;
-    html = textarea.value;
-
-    return html.replace(/\u00a0/g, " ").trim();
-  };
-
-  const renderedHtml = normalizeHtml(material?.konten);
-
   /* ================= CHECK COMPLETION STATUS ================= */
   useEffect(() => {
     const currentCourse = courses.find((c) => c.id === Number(kelasId));
@@ -128,25 +114,6 @@ const DetailMaterialPage = () => {
     } finally {
       setIsToggling(false);
     }
-  };
-
-  /* ================= FRAMER VARIANTS ================= */
-  const variants = {
-    enter: (dir) => ({
-      x: 80 * dir,
-      opacity: 0,
-      filter: "blur(6px)",
-    }),
-    center: {
-      x: 0,
-      opacity: 1,
-      filter: "blur(0px)",
-    },
-    exit: (dir) => ({
-      x: -80 * dir,
-      opacity: 0,
-      filter: "blur(6px)",
-    }),
   };
 
   if (loading && !material) return <Loading />;
@@ -203,106 +170,29 @@ const DetailMaterialPage = () => {
       />
 
       <div className="relative max-w-5xl mx-auto px-6 py-10">
-        <AnimatePresence mode="wait">
-          <motion.article
-            key={material.id}
-            custom={animDir || 1}
-            variants={variants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{ duration: 0.35 }}
-            className="prose prose-slate max-w-none text-gray-800"
-            dangerouslySetInnerHTML={{ __html: renderedHtml }}
-          />
-        </AnimatePresence>
+        {/* Rich content moved to MaterialContent */}
+        <MaterialContent material={material} animDir={animDir} />
 
+        {/* overlay preserved here */}
         {isTransitioning && (
           <div className="absolute inset-0 bg-white/50 backdrop-blur-sm" />
         )}
 
-        {/* Completion Status Banner - moved here (above navigation) */}
-        <div className="max-w-5xl mx-auto px-6 mt-6">
-          <motion.button
-            onClick={handleToggleComplete}
-            whileTap={{ scale: 0.98 }}
-            aria-pressed={isCompleted}
-            disabled={isToggling}
-            className={`w-full py-3 px-4 rounded-full flex items-center justify-center gap-3 font-semibold text-white shadow-sm ${
-              isCompleted
-                ? "bg-linear-to-r from-emerald-400 to-green-600 hover:from-emerald-500 hover:to-green-700"
-                : "bg-linear-to-r from-sky-500 to-indigo-600 hover:from-sky-600 hover:to-indigo-700"
-            }`}
-          >
-            <span
-              className={`inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/20 ${
-                isCompleted ? "ring-1 ring-white/30" : "ring-0"
-              }`}
-            >
-              {isToggling ? (
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              ) : (
-                <Bookmark
-                  className={`w-5 h-5 ${
-                    isCompleted ? "text-white" : "text-white/90"
-                  }`}
-                />
-              )}
-            </span>
-            <span className="text-sm">
-              {isCompleted ? "Batal Selesai" : "Tandai Materi Selesai"}
-            </span>
-          </motion.button>
-        </div>
+        {/* Completion banner moved to component */}
+        <MaterialCompletionToggle
+          isCompleted={isCompleted}
+          isToggling={isToggling}
+          onToggle={handleToggleComplete}
+        />
 
-        {/* ================= NAVIGATION ================= */}
-        <div className="mt-10 flex justify-between border-t pt-6">
-          {prevMaterial ? (
-            <motion.div
-              whileHover={{ y: -4, scale: 1.01 }}
-              whileTap={{ scale: 0.98 }}
-              className="rounded"
-            >
-              <Button
-                onClick={() =>
-                  navigate(
-                    `/user/courses/${kelasId}/materials/${prevMaterial.id}`
-                  )
-                }
-                variant="primary"
-                className="flex items-center gap-2 px-4 py-2"
-              >
-                <ArrowLeft size={16} />
-                Materi Sebelumnya
-              </Button>
-            </motion.div>
-          ) : (
-            <div />
-          )}
-
-          {nextMaterial ? (
-            <motion.div
-              whileHover={{ y: -4, scale: 1.01 }}
-              whileTap={{ scale: 0.98 }}
-              className="rounded"
-            >
-              <Button
-                onClick={() =>
-                  navigate(
-                    `/user/courses/${kelasId}/materials/${nextMaterial.id}`
-                  )
-                }
-                variant="primary"
-                className="flex items-center gap-2 px-4 py-2"
-              >
-                Materi Selanjutnya
-                <ArrowRight size={16} />
-              </Button>
-            </motion.div>
-          ) : (
-            <div />
-          )}
-        </div>
+        {/* Navigation moved to component */}
+        <MaterialNavigator
+          prevMaterial={prevMaterial}
+          nextMaterial={nextMaterial}
+          onNavigate={(id) =>
+            navigate(`/user/courses/${kelasId}/materials/${id}`)
+          }
+        />
       </div>
     </div>
   );

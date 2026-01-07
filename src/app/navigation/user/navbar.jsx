@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, LogOut, Menu, X } from "lucide-react";
 import Logo from "@/components/logo";
 import { handleLogout } from "@/features/auth/services/AuthHandleSubmit";
-import { useNavbar } from "../hooks/useNavbar";
+import { useNavbar } from "../../../features/users/hooks/useNavbar";
 import { USER_NAV_ITEMS } from "@/config/navigation";
 
 export default function Navbar() {
