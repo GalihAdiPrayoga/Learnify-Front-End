@@ -67,16 +67,6 @@ const CoursePage = () => {
 
   if (loading) return <Loading />;
 
-  if (error) {
-    return (
-      <div className="p-6">
-        <div className="rounded-md bg-red-50 p-4 text-sm text-red-700">
-          {error}
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="p-6 max-w-7xl mx-auto">
       <CardHeader
@@ -86,14 +76,26 @@ const CoursePage = () => {
         onBack={() => navigate(-1)}
       />
 
-      {/* Search bar */}
+      {/* Search bar - always visible */}
       <CourseSearch
         value={query}
         onChange={setQuery}
         onClear={() => setQuery("")}
       />
 
-      {displayedCourses.length === 0 ? (
+      {error ? (
+        <div className="mt-6">
+          <NotFound
+            title="Gagal Memuat Data"
+            message={
+              error ||
+              "Terjadi kesalahan saat mengambil data kelas. Silakan coba lagi."
+            }
+            type="error"
+            onRetry={() => refetch?.() || window.location.reload()}
+          />
+        </div>
+      ) : displayedCourses.length === 0 ? (
         query ? (
           <NotFound
             title="Tidak ada hasil"
@@ -110,7 +112,7 @@ const CoursePage = () => {
           />
         )
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
           {displayedCourses.map((course, index) => (
             <CourseCard
               key={course.id}

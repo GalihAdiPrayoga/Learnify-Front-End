@@ -58,7 +58,7 @@ export default function NotFound({
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className={`${style.bgColor} border ${style.borderColor} rounded-lg p-8 md:p-12 text-center`}
+      className="rounded-lg p-8 md:p-12 text-center"
     >
       <motion.div
         variants={iconVariants}

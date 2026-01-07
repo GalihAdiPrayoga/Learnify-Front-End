@@ -101,9 +101,15 @@ const MaterialPage = () => {
   if (error) {
     return (
       <div className="p-6">
-        <div className="rounded-md bg-red-50 p-4 text-sm text-red-700">
-          {error}
-        </div>
+        <NotFound
+          title="Gagal Memuat Data"
+          message={
+            error ||
+            "Terjadi kesalahan saat mengambil data materi. Silakan coba lagi."
+          }
+          type="error"
+          onRetry={() => window.location.reload()}
+        />
       </div>
     );
   }
