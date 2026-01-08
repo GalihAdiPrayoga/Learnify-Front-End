@@ -1,41 +1,21 @@
-import axiosInstance from "./axios";
+import axios from "./axios";
 
 export const materiApi = {
   // Admin endpoints
-  getAll: async (kelasId) => {
-    const url = kelasId ? `/materi?kelas_id=${kelasId}` : `/materi`;
-    const response = await axiosInstance.get(url);
-    return response.data;
+  getAll: (kelasId) => {
+    const url = kelasId ? `/materi?kelas_id=${kelasId}` : "/materi";
+    return axios.get(url);
   },
 
-  getById: async (id) => {
-    const response = await axiosInstance.get(`/materi/${id}`);
-    return response.data;
-  },
+  getById: (id) => axios.get(`/materi/${id}`),
 
-  create: async (materiData) => {
-    const response = await axiosInstance.post("/materi", materiData);
-    return response.data;
-  },
+  create: (data) => axios.post("/materi", data),
 
-  update: async (id, materiData) => {
-    const response = await axiosInstance.put(`/materi/${id}`, materiData);
-    return response.data;
-  },
+  update: (id, data) => axios.put(`/materi/${id}`, data),
 
-  delete: async (id) => {
-    const response = await axiosInstance.delete(`/materi/${id}`);
-    return response.data;
-  },
+  delete: (id) => axios.delete(`/materi/${id}`),
 
-  // User endpoints
-  getByKelas: async (kelasId) => {
-    const response = await axiosInstance.get(`/user/materi/kelas/${kelasId}`);
-    return response.data;
-  },
-
-  getDetailForUser: async (id) => {
-    const response = await axiosInstance.get(`/user/materi/${id}`);
-    return response.data;
-  },
+  // Admin menggunakan endpoint /materi/kelas/{kelasId}
+  // User menggunakan endpoint /user/materi/kelas/{kelasId}
+  getByKelas: (kelasId) => axios.get(`/materi/kelas/${kelasId}`),
 };
