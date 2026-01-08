@@ -23,13 +23,20 @@ const MaterialPage = () => {
 
   // optimistic local state to reduce perceived delay
   const [localCompleted, setLocalCompleted] = useState(
-    new Set(completedMaterials)
+    () => new Set(completedMaterials || [])
   );
   const [togglingIds, setTogglingIds] = useState(new Set());
   const [togglingAll, setTogglingAll] = useState(false);
 
   useEffect(() => {
-    setLocalCompleted(new Set(completedMaterials));
+    const newSet = new Set(completedMaterials || []);
+    setLocalCompleted((prev) => {
+      if (prev.size === newSet.size) {
+        for (const v of prev) if (!newSet.has(v)) return newSet;
+        return prev; // identical, skip update
+      }
+      return newSet;
+    });
   }, [completedMaterials]);
 
   const handleMaterialClick = (materialId) => {

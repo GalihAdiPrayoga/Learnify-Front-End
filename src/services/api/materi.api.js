@@ -17,5 +17,8 @@ export const materiApi = {
 
   // Admin menggunakan endpoint /materi/kelas/{kelasId}
   // User menggunakan endpoint /user/materi/kelas/{kelasId}
-  getByKelas: (kelasId) => axios.get(`/materi/kelas/${kelasId}`),
+  getByKelas: (kelasId) => axios.get(`/user/materi/kelas/${kelasId}`),
+
+  // User detail endpoint (used by DetailMaterialPage)
+  getDetailForUser: (id) => axios.get(`/user/materi/${id}`),
 };

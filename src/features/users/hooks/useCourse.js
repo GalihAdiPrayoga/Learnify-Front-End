@@ -1,40 +1,60 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import axiosInstance from "@/services/api/axios";
 
 export const useCourse = () => {
   const [courses, setCourses] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const fetchCourses = async () => {
+  const isMountedRef = useRef(true);
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
+
+  // new refs to avoid loops / duplicate updates
+  const pendingRef = useRef(false);
+  const lastCoursesJsonRef = useRef(null);
+  const lastErrorRef = useRef(null);
+
+  const fetchCourses = useCallback(async () => {
+    if (!isMountedRef.current) return;
+    if (pendingRef.current) return;
+    pendingRef.current = true;
     setLoading(true);
     try {
       const res = await axiosInstance.get("/user/kelas");
-      console.log("=== FULL RESPONSE ===", res.data);
       const data = res?.data?.data || [];
-      console.log("=== COURSES DATA ===", data);
-      console.log(
-        "=== ENROLLED COURSES ===",
-        data.filter((c) => c.isEnrolled)
-      );
-      console.log(
-        "=== IN PROGRESS COURSES ===",
-        data.filter((c) => c.isEnrolled && c.isInProgress)
-      );
-      setCourses(data);
-      setError(null);
+      const newJson = JSON.stringify(data);
+      if (isMountedRef.current) {
+        if (lastCoursesJsonRef.current !== newJson) {
+          setCourses(data);
+          lastCoursesJsonRef.current = newJson;
+        }
+        lastErrorRef.current = null;
+        setError(null);
+      }
     } catch (err) {
-      console.error("Error fetching courses:", err);
-      setError(err?.response?.data?.message || "Gagal memuat kelas");
-      setCourses([]);
+      if (isMountedRef.current) {
+        const message = err?.response?.data?.message || "Gagal memuat kelas";
+        if (lastErrorRef.current !== message) {
+          setError(message);
+          lastErrorRef.current = message;
+        }
+        setCourses([]);
+        lastCoursesJsonRef.current = JSON.stringify([]);
+      }
     } finally {
-      setLoading(false);
+      if (isMountedRef.current) setLoading(false);
+      pendingRef.current = false;
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchCourses();
-  }, []);
+  }, [fetchCourses]);
 
   return {
     courses,
