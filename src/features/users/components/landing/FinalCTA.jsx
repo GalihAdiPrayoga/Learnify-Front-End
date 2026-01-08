@@ -7,7 +7,7 @@ export default function FinalCTA() {
     <section className="py-16 bg-white">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div className="animate-fade-in-up">
-        <div className="inline-block p-4 bg-linear-to-br from-zinc-900 to-slate-500 rounded-3xl mb-6">
+        <div className="inline-block p-4 bg-zinc-900 rounded-3xl mb-6">
           <Rocket className="w-16 h-16 text-white" />
           </div>
 

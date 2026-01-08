@@ -24,9 +24,9 @@ export const companies = [
 ];
 
 export const stats = [
-  { number: "50K+", label: "Active Students", icon: Users },
-  { number: "500+", label: "Expert Instructors", icon: UserCheck },
-  { number: "1000+", label: "Courses Available", icon: BookOpen },
+  { number: "1000", label: "Active Students", icon: Users },
+  { number: "25", label: "Expert Instructors", icon: UserCheck },
+  { number: "10", label: "Courses Available", icon: BookOpen },
   { number: "95%", label: "Success Rate", icon: Award },
 ];
 

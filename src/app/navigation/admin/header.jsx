@@ -49,7 +49,7 @@ export default function Header({ hasScrolled = false }) {
       <div className="ml-auto" ref={dropdownRef}>
         <button
           onClick={() => setDropdownOpen(!dropdownOpen)}
-          className="flex items-center gap-3 hover:bg-gray-50 px-3 py-2 rounded-xl transition-all hover:shadow-sm"
+          className="flex items-center gap-3 px-3 py-2"
         >
           <div className="w-10 h-10 bg-linear-to-br from-zinc-800 to-zinc-900 rounded-full flex items-center justify-center overflow-hidden ring-2 ring-white shadow-sm hover:shadow-md hover:ring-indigo-100 transition-all">
             {getProfileImageUrl() ? (
@@ -95,7 +95,7 @@ export default function Header({ hasScrolled = false }) {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.96, y: -8 }}
               transition={{ duration: 0.15, ease: [0.16, 1, 0.3, 1] }}
-              className="absolute right-8 mt-2 w-56 bg-white backdrop-blur-xl shadow-2xl shadow-gray-300/40 rounded-2xl border border-gray-100 overflow-hidden origin-top-right ring-1 ring-black/5"
+              className="absolute right-8 mt-2 w-45 bg-white backdrop-blur-xl shadow-2xl shadow-gray-300/40 rounded-lg border border-gray-100 overflow-hidden origin-top-right ring-1 ring-black/5"
             >
               {menuItems.map((item, index) => {
                 const Icon = item.icon;
