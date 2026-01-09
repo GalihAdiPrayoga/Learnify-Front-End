@@ -16,6 +16,8 @@ export const materiApi = {
   delete: (id) => axios.delete(`/materi/${id}`),
 
   // Admin menggunakan endpoint /materi/kelas/{kelasId}
+  getByKelasAdmin: (kelasId) => axios.get(`/materi/kelas/${kelasId}`),
+
   // User menggunakan endpoint /user/materi/kelas/{kelasId}
   getByKelas: (kelasId) => axios.get(`/user/materi/kelas/${kelasId}`),
 

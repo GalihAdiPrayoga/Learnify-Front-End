@@ -8,6 +8,7 @@ export default function AdminLayouts() {
   const mainRef = useRef(null);
 
   useEffect(() => {
+    
     const mainElement = mainRef.current;
     if (!mainElement) return;
 

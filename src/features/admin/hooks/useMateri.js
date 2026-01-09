@@ -15,7 +15,7 @@ export const useMateri = (kelasId) => {
     setError(null);
     try {
       const response = await materiApi.getAll(kelasId);
-      setMateriList(response.data || []);
+      setMateriList(response.data.data || []);
     } catch (err) {
       const msg = err.response?.data?.message || "Gagal memuat materi";
       setError(msg);

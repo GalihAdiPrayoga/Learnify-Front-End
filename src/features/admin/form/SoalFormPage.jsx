@@ -19,6 +19,8 @@ export default function SoalFormPage() {
   const [kelasOptions, setKelasOptions] = useState([]);
   const [materiOptions, setMateriOptions] = useState([]);
   const [selectedKelas, setSelectedKelas] = useState("");
+  const [savedSoals, setSavedSoals] = useState([]);
+  const [currentSoalIndex, setCurrentSoalIndex] = useState(0);
 
   const { handleSubmit, control, reset, watch, setValue, formState } = useForm({
     defaultValues: {
@@ -70,7 +72,7 @@ export default function SoalFormPage() {
     console.log("Fetching materi for kelas:", selectedKelas);
 
     materiApi
-      .getByKelas(selectedKelas)
+      .getByKelasAdmin(selectedKelas)
       .then((res) => {
         console.log("Materi response:", res);
         const rawData = res?.data?.data ?? res?.data ?? [];
@@ -103,16 +105,10 @@ export default function SoalFormPage() {
     soalApi
       .getById(id)
       .then((res) => {
-        console.log("Soal response for edit:", res);
         const soal = res?.data ?? res;
-        console.log("Soal data:", soal);
-
-        // Set kelas dari materi
         if (soal.materi && soal.materi.kelas_id) {
-          console.log("Setting kelas from materi:", soal.materi.kelas_id);
           setSelectedKelas(String(soal.materi.kelas_id));
         }
-
         reset({
           materi_id: String(soal.materi_id || ""),
           pertanyaan: soal.pertanyaan || "",
@@ -131,23 +127,65 @@ export default function SoalFormPage() {
       .finally(() => setLoading(false));
   }, [id, editing, navigate, reset]);
 
-  const onSubmit = async (data) => {
+  // Save current soal and continue to next
+  const handleNext = async (data) => {
+    const newSoal = { ...data, index: currentSoalIndex };
+    setSavedSoals((prev) => [...prev, newSoal]);
+
+    // Reset form but keep kelas and materi
+    const keepKelas = selectedKelas;
+    const keepMateri = data.materi_id;
+
+    reset({
+      materi_id: keepMateri,
+      pertanyaan: "",
+      jawaban_a: "",
+      jawaban_b: "",
+      jawaban_c: "",
+      jawaban_d: "",
+      jawaban_benar: "",
+    });
+
+    setSelectedKelas(keepKelas);
+    setCurrentSoalIndex((prev) => prev + 1);
+
+    toastr.success(
+      `Soal ${currentSoalIndex + 1} tersimpan. Lanjutkan ke soal berikutnya.`
+    );
+  };
+
+  // Save all soals to backend
+  const handleFinish = async (data) => {
+    const allSoals = [...savedSoals, { ...data, index: currentSoalIndex }];
+
     setLoading(true);
     try {
-      if (editing) {
-        await soalApi.update(id, data);
-        toastr.success("Soal berhasil diperbarui");
-      } else {
-        await soalApi.create(data);
-        toastr.success("Soal berhasil dibuat");
-      }
+      const promises = allSoals.map((soal) => soalApi.create(soal));
+      await Promise.all(promises);
+      toastr.success(`${allSoals.length} soal berhasil dibuat`);
       navigate("/admin/soal");
     } catch (err) {
-      const msg =
-        err?.response?.data?.message || err?.message || "Gagal menyimpan";
+      const msg = err?.response?.data?.message || "Gagal menyimpan soal";
       toastr.error(msg);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const onSubmit = async (data) => {
+    if (editing) {
+      // Edit mode - save single soal
+      setLoading(true);
+      try {
+        await soalApi.update(id, data);
+        toastr.success("Soal berhasil diperbarui");
+        navigate("/admin/soal");
+      } catch (err) {
+        const msg = err?.response?.data?.message || "Gagal menyimpan";
+        toastr.error(msg);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -157,7 +195,15 @@ export default function SoalFormPage() {
     <div className="p-6">
       <HeaderCard
         title={editing ? "Edit Soal" : "Tambah Soal"}
-        subtitle={editing ? "Perbarui informasi soal" : "Buat soal baru"}
+        subtitle={
+          editing
+            ? "Perbarui informasi soal"
+            : savedSoals.length > 0
+            ? `Membuat soal ke-${currentSoalIndex + 1} (${
+                savedSoals.length
+              } soal tersimpan)`
+            : "Buat soal baru"
+        }
         showBack={true}
         onBack={() => navigate("/admin/soal")}
       />
@@ -177,13 +223,16 @@ export default function SoalFormPage() {
                 value={selectedKelas}
                 onChange={(e) => {
                   setSelectedKelas(e.target.value);
-                  setValue("materi_id", ""); // Reset materi when kelas changes
+                  setValue("materi_id", "");
                 }}
                 className="w-full"
+                disabled={editing || savedSoals.length > 0}
               />
-              <p className="text-xs text-gray-500 mt-1">
-                Pilih kelas untuk menampilkan materi
-              </p>
+              {savedSoals.length > 0 && (
+                <p className="text-xs text-blue-600 mt-1">
+                  Kelas terkunci untuk batch soal ini
+                </p>
+              )}
             </div>
 
             <div>
@@ -211,11 +260,18 @@ export default function SoalFormPage() {
                         field.onChange?.(e?.target ? e.target.value : e)
                       }
                       className="w-full"
-                      disabled={!selectedKelas}
+                      disabled={
+                        !selectedKelas || editing || savedSoals.length > 0
+                      }
                     />
                     {fieldState.error && (
                       <p className="text-xs text-red-500 mt-1">
                         {fieldState.error.message}
+                      </p>
+                    )}
+                    {savedSoals.length > 0 && (
+                      <p className="text-xs text-blue-600 mt-1">
+                        Materi terkunci untuk batch soal ini
                       </p>
                     )}
                   </>
@@ -387,18 +443,41 @@ export default function SoalFormPage() {
             <Button
               type="button"
               variant="secondary"
-              onClick={() => navigate("/admin/soal")}
+              onClick={() => {
+                if (savedSoals.length > 0) {
+                  toastr.warning("Ada soal yang belum disimpan permanen.");
+                }
+                navigate("/admin/soal");
+              }}
               className="h-10 px-6"
             >
               Batal
             </Button>
+
+            {!editing && (
+              <Button
+                type="button"
+                variant="primary"
+                onClick={handleSubmit(handleNext)}
+                loading={formState.isSubmitting}
+                className="h-10 px-6"
+              >
+                Selanjutnya
+              </Button>
+            )}
+
             <Button
-              type="submit"
+              type={editing ? "submit" : "button"}
               variant="primary"
-              loading={formState.isSubmitting}
+              onClick={editing ? undefined : handleSubmit(handleFinish)}
+              loading={formState.isSubmitting || loading}
               className="h-10 px-8"
             >
-              {editing ? "Perbarui" : "Simpan"}
+              {editing
+                ? "Perbarui"
+                : savedSoals.length > 0
+                ? "Selesai & Simpan Semua"
+                : "Simpan"}
             </Button>
           </div>
         </form>
