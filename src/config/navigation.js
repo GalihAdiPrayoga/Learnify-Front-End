@@ -14,6 +14,10 @@ export const USER_NAV_ITEMS = [
     label: "My Progress",
     path: "/user/progress",
   },
+  {
+    label: "History",
+    path: "/user/history",
+  }
 ];
 
 /**

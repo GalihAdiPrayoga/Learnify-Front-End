@@ -17,9 +17,8 @@ export default function SoalPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
+  // delete immediately (same behavior as MateriPage)
   const handleDelete = async (id) => {
-    if (!confirm("Apakah Anda yakin ingin menghapus soal ini?")) return;
-
     try {
       await deleteSoal(id);
       toastr.success("Soal berhasil dihapus");

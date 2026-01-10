@@ -10,6 +10,8 @@ const UserCourse = React.lazy(() => import("@/features/users/pages/CoursePage"))
 const ProgressPage = React.lazy(() => import("@/features/users/pages/ProgressPage"));
 const MaterialPage = React.lazy(() => import("@/features/users/pages/MaterialPage"));
 const DetailMaterialPage = React.lazy(() => import("@/features/users/pages/DetailMaterialPage"));
+const ExamPage = React.lazy(() => import("@/features/users/pages/ExamPage"));
+const HistoryPage = React.lazy(() => import("@/features/users/pages/HistoryPage"));
 
 
 // Buat wrapper component agar Suspense tidak menghasilkan elemen langsung pada level modul
@@ -48,6 +50,16 @@ const DetailMaterialWrapper = (props) => (
     <DetailMaterialPage {...props} />
   </React.Suspense>
 );
+const ExamWrapper = (props) => (
+  <React.Suspense fallback={<Loading />}>
+    <ExamPage {...props} />
+  </React.Suspense>
+);
+const HistoryWrapper = (props) => (
+  <React.Suspense fallback={<Loading />}>
+    <HistoryPage {...props} />
+  </React.Suspense>
+);
 
 export const UserRoutes = [
   {
@@ -60,6 +72,8 @@ export const UserRoutes = [
       { path: "progress", element: <ProtectedRoute requiredRole="user"><ProgressWrapper /></ProtectedRoute> },
       { path: "courses/:kelasId/materials", element: <ProtectedRoute requiredRole="user"><MaterialWrapper /></ProtectedRoute> },
       { path: "courses/:kelasId/materials/:materialId", element: <ProtectedRoute requiredRole="user"><DetailMaterialWrapper /></ProtectedRoute> },
+      { path: "courses/:kelasId/materials/:materialId/exam", element: <ProtectedRoute requiredRole="user"><ExamWrapper /></ProtectedRoute> },
+      { path: "history", element: <ProtectedRoute requiredRole="user"><HistoryWrapper /></ProtectedRoute>}
     ],
   },
 ];

@@ -12,4 +12,6 @@ export const soalApi = {
   delete: (id) => axios.delete(`/soal/${id}`),
 
   getByMateri: (materiId) => axios.get(`/user/soal/materi/${materiId}`),
+
+  checkSoalExists: (materiId) => axios.get(`/user/soal/materi/${materiId}`),
 };

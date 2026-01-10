@@ -116,6 +116,19 @@ const DetailMaterialPage = () => {
     }
   };
 
+  const handleStartExam = (materiId) => {
+    console.log("🚀 Starting exam for material:", materiId);
+    navigate(`/user/courses/${kelasId}/materials/${materiId}/exam`);
+  };
+
+  console.log("📄 DetailMaterialPage:", {
+    kelasId,
+    materialId,
+    currentIndex,
+    prevMaterial: prevMaterial?.id,
+    nextMaterial: nextMaterial?.id,
+  });
+
   if (loading && !material) return <Loading />;
   if (!material) return null;
 
@@ -170,28 +183,27 @@ const DetailMaterialPage = () => {
       />
 
       <div className="relative max-w-5xl mx-auto px-6 py-10">
-        {/* Rich content moved to MaterialContent */}
         <MaterialContent material={material} animDir={animDir} />
 
-        {/* overlay preserved here */}
         {isTransitioning && (
           <div className="absolute inset-0 bg-white/50 backdrop-blur-sm" />
         )}
 
-        {/* Completion banner moved to component */}
         <MaterialCompletionToggle
           isCompleted={isCompleted}
           isToggling={isToggling}
           onToggle={handleToggleComplete}
         />
 
-        {/* Navigation moved to component */}
         <MaterialNavigator
           prevMaterial={prevMaterial}
           nextMaterial={nextMaterial}
-          onNavigate={(id) =>
-            navigate(`/user/courses/${kelasId}/materials/${id}`)
-          }
+          currentMaterialId={materialId}
+          onNavigate={(id) => {
+            console.log("🔄 Navigating to material:", id);
+            navigate(`/user/courses/${kelasId}/materials/${id}`);
+          }}
+          onStartExam={handleStartExam}
         />
       </div>
     </div>
