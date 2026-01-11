@@ -33,6 +33,10 @@ export default function Navbar() {
   // mobile menu open state (was missing -> ReferenceError)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  // nav dropdown state (desktop) and mobile nav expand state
+  const [navDropdownOpen, setNavDropdownOpen] = useState(null);
+  const [mobileNavOpen, setMobileNavOpen] = useState(null);
+
   // call getProfileImageUrl once per render and memoize the result
   const profileImageUrl = useMemo(() => {
     try {
@@ -75,15 +79,66 @@ export default function Navbar() {
 
             {/* Desktop Menu */}
             <div className="hidden lg:flex items-center gap-8">
-              {USER_NAV_ITEMS.map((item) => (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  className="text-gray-600 hover:text-zinc-900 font-medium transition"
-                >
-                  {item.label}
-                </Link>
-              ))}
+              {USER_NAV_ITEMS.map((item) =>
+                item.children ? (
+                  <div
+                    key={item.label}
+                    className="relative"
+                    onMouseEnter={() => setNavDropdownOpen(item.label)}
+                    onMouseLeave={() => setNavDropdownOpen(null)}
+                  >
+                    <button
+                      onClick={() =>
+                        setNavDropdownOpen((v) =>
+                          v === item.label ? null : item.label
+                        )
+                      }
+                      className="flex items-center gap-1 text-gray-600 hover:text-zinc-900 font-medium transition"
+                    >
+                      {item.label}
+                      <motion.div
+                        animate={{
+                          rotate: navDropdownOpen === item.label ? 180 : 0,
+                        }}
+                        transition={{ duration: 0.2 }}
+                        style={{ display: "inline-flex" }}
+                      >
+                        <ChevronDown className="w-4 h-4" />
+                      </motion.div>
+                    </button>
+
+                    <AnimatePresence>
+                      {navDropdownOpen === item.label && (
+                        <motion.div
+                          initial={{ opacity: 0, y: -6, scale: 0.98 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, y: -6, scale: 0.98 }}
+                          transition={{ duration: 0.12 }}
+                          className="absolute left-0 mt-3 w-48 bg-white shadow-lg rounded-md border border-gray-100 z-40 overflow-hidden"
+                        >
+                          {item.children.map((c) => (
+                            <Link
+                              key={c.path}
+                              to={c.path}
+                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                            >
+                              {c.label}
+                            </Link>
+                          ))}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                ) : (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    className="text-gray-600 hover:text-zinc-900 font-medium transition"
+                  >
+                    {item.label}
+                  </Link>
+                )
+              )}
             </div>
           </div>
 
@@ -96,8 +151,13 @@ export default function Navbar() {
               Dashboard
             </Link>
 
-            {/* Profile Dropdown */}
-            <div className="relative" ref={dropdownRef}>
+            {/* Profile Dropdown (auto-open on hover for desktop) */}
+            <div
+              className="relative"
+              ref={dropdownRef}
+              onMouseEnter={() => setDropdownOpen(true)}
+              onMouseLeave={() => setDropdownOpen(false)}
+            >
               <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
                 className="flex items-center gap-2 hover:bg-gray-50 px-2 py-1 rounded-lg transition"
@@ -260,16 +320,54 @@ export default function Navbar() {
               className="lg:hidden border-t border-gray-200"
             >
               <div className="px-4 py-4 space-y-3">
-                {USER_NAV_ITEMS.map((item) => (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    onClick={handleNavClick}
-                    className="block text-gray-600 hover:text-zinc-900 font-medium py-2 transition"
-                  >
-                    {item.label}
-                  </Link>
-                ))}
+                {USER_NAV_ITEMS.map((item) =>
+                  item.children ? (
+                    <div key={item.label} className="space-y-1">
+                      <button
+                        onClick={() =>
+                          setMobileNavOpen((v) =>
+                            v === item.label ? null : item.label
+                          )
+                        }
+                        className="w-full flex items-center justify-between text-gray-700 font-medium py-2"
+                      >
+                        <span>{item.label}</span>
+                        <motion.div
+                          animate={{
+                            rotate: mobileNavOpen === item.label ? 180 : 0,
+                          }}
+                          transition={{ duration: 0.2 }}
+                          style={{ display: "inline-flex" }}
+                        >
+                          <ChevronDown className="w-4 h-4" />
+                        </motion.div>
+                      </button>
+                      {mobileNavOpen === item.label &&
+                        item.children.map((c) => (
+                          <Link
+                            key={c.path}
+                            to={c.path}
+                            onClick={() => {
+                              handleNavClick();
+                              setMobileNavOpen(null);
+                            }}
+                            className="block pl-4 text-gray-600 hover:text-zinc-900 font-medium py-2 transition"
+                          >
+                            {c.label}
+                          </Link>
+                        ))}
+                    </div>
+                  ) : (
+                    <Link
+                      key={item.path}
+                      to={item.path}
+                      onClick={handleNavClick}
+                      className="block text-gray-600 hover:text-zinc-900 font-medium py-2 transition"
+                    >
+                      {item.label}
+                    </Link>
+                  )
+                )}
 
                 <div className="border-t border-gray-200 pt-3 mt-3">
                   <Link

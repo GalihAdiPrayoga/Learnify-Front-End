@@ -52,12 +52,15 @@ export const useExam = (materiId) => {
   };
 
   const submitExam = async () => {
-    if (isSubmitting) return;
+    if (isSubmitting) {
+      console.warn("⚠️ Submit already in progress, ignoring duplicate call");
+      return { success: false, error: "Already submitting" };
+    }
 
     const unanswered = soalList.filter((s) => !answers[s.id]);
     if (unanswered.length > 0) {
       toast.error(`Masih ada ${unanswered.length} soal yang belum dijawab`);
-      return;
+      return { success: false, error: "Incomplete answers" };
     }
 
     setIsSubmitting(true);
@@ -71,6 +74,9 @@ export const useExam = (materiId) => {
         })
       );
       await Promise.all(answerPromises);
+
+      // ✅ Tambah delay kecil sebelum finish (prevent race condition)
+      await new Promise((resolve) => setTimeout(resolve, 300));
 
       // Finish exam
       const finishRes = await axios.post("/user/hasil-ujian/finish", {

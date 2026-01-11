@@ -11,13 +11,13 @@ export const USER_NAV_ITEMS = [
     path: "/user/courses",
   },
   {
-    label: "My Progress",
+    label: "Progress",
     path: "/user/progress",
+    children: [
+      { label: "Materi", path: "/user/progress" },
+      { label: "Exam", path: "/user/history" },
+    ],
   },
-  {
-    label: "History",
-    path: "/user/history",
-  }
 ];
 
 /**

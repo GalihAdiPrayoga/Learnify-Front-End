@@ -6,6 +6,9 @@ import CardHeader from "../components/CardHeader";
 import Button from "@/components/button";
 import { FileText, Trophy } from "lucide-react";
 import { motion } from "framer-motion";
+import NotFound from "@/features/error/notfound";
+import HistoryStatsCard from "../components/history/HistoryStatsCard";
+import HistoryChart from "../components/history/HistoryChart";
 
 const HistoryPage = () => {
   const navigate = useNavigate();
@@ -28,17 +31,60 @@ const HistoryPage = () => {
 
   if (loading) return <Loading />;
 
+  const total = history.length;
+  const passed = history.filter((h) => Number(h.nilai) >= 60).length;
+  const avg =
+    total > 0
+      ? Math.round(history.reduce((s, h) => s + Number(h.nilai), 0) / total)
+      : 0;
+
   return (
-    <div className="p-6 max-w-5xl mx-auto">
+    <div className="p-6 max-w-7xl mx-auto">
       <CardHeader
         title="Riwayat Ujian"
         subtitle="Lihat hasil ujian Anda sebelumnya"
-        showBack={false}
+        showBack={true}
+        onBack={() => navigate(-1)}
       />
 
+      {/* Stats Cards (always shown) */}
+      <HistoryStatsCard total={total} passed={passed} average={avg} />
+
+      {/* Chart Card (always shown) */}
+      {history.length > 0 ? (
+        <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm mb-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            Distribusi Nilai
+          </h3>
+          <p className="text-sm text-gray-500 mb-6">
+            Grafik performa ujian berdasarkan rentang nilai
+          </p>
+          <HistoryChart history={history} />
+        </div>
+      ) : (
+        <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm mb-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            Distribusi Nilai
+          </h3>
+          <p className="text-sm text-gray-500 mb-4">
+            Belum ada data untuk ditampilkan
+          </p>
+          <div className="h-64 flex items-center justify-center bg-gray-50 rounded-xl border border-dashed border-gray-300">
+            <p className="text-gray-400 text-sm">
+              Grafik akan muncul setelah Anda menyelesaikan ujian
+            </p>
+          </div>
+        </div>
+      )}
+
       {history.length === 0 ? (
-        <div className="text-center py-12 text-gray-500">
-          Belum ada riwayat ujian
+        <div className="p-6">
+          <NotFound
+            title="Belum Ada Riwayat Ujian"
+            message="Anda belum menyelesaikan ujian apapun. Cobalah mengikuti ujian pada materi yang tersedia."
+            type="notfound"
+            onHome={() => navigate("/user/courses")}
+          />
         </div>
       ) : (
         <div className="mt-6 space-y-4">
