@@ -4,15 +4,31 @@ import ProtectedRoute from "../helpers/ProtectedRoute";
 import Loading from "@/components/Loading";
 
 // Lazy-load pages
-const LandingPage = React.lazy(() => import("@/features/users/pages/LandingPage"));
-const UserDashboard = React.lazy(() => import("@/features/users/pages/DashboardPage"));
-const UserCourse = React.lazy(() => import("@/features/users/pages/CoursePage"));
-const ProgressPage = React.lazy(() => import("@/features/users/pages/ProgressPage"));
-const MaterialPage = React.lazy(() => import("@/features/users/pages/MaterialPage"));
-const DetailMaterialPage = React.lazy(() => import("@/features/users/pages/DetailMaterialPage"));
+const LandingPage = React.lazy(() =>
+  import("@/features/users/pages/LandingPage")
+);
+const UserDashboard = React.lazy(() =>
+  import("@/features/users/pages/DashboardPage")
+);
+const UserCourse = React.lazy(() =>
+  import("@/features/users/pages/CoursePage")
+);
+const ProgressPage = React.lazy(() =>
+  import("@/features/users/pages/ProgressPage")
+);
+const MaterialPage = React.lazy(() =>
+  import("@/features/users/pages/MaterialPage")
+);
+const DetailMaterialPage = React.lazy(() =>
+  import("@/features/users/pages/DetailMaterialPage")
+);
 const ExamPage = React.lazy(() => import("@/features/users/pages/ExamPage"));
-const HistoryPage = React.lazy(() => import("@/features/users/pages/HistoryPage"));
-
+const HistoryPage = React.lazy(() =>
+  import("@/features/users/pages/HistoryPage")
+);
+const ResultPage = React.lazy(() =>
+  import("@/features/users/pages/ResultPage")
+);
 
 // Buat wrapper component agar Suspense tidak menghasilkan elemen langsung pada level modul
 const LandingWrapper = (props) => (
@@ -60,20 +76,89 @@ const HistoryWrapper = (props) => (
     <HistoryPage {...props} />
   </React.Suspense>
 );
+const ResultWrapper = (props) => (
+  <React.Suspense fallback={<Loading />}>
+    <ResultPage {...props} />
+  </React.Suspense>
+);
 
 export const UserRoutes = [
   {
     path: "user",
     element: <UserLayouts />,
     children: [
-      { path: "landing", element: <ProtectedRoute requiredRole="user"><LandingWrapper /></ProtectedRoute> },
-      { path: "dashboard", element: <ProtectedRoute requiredRole="user"><DashboardWrapper /></ProtectedRoute> },
-      { path: "courses", element: <ProtectedRoute requiredRole="user"><CourseWrapper /></ProtectedRoute> },
-      { path: "progress", element: <ProtectedRoute requiredRole="user"><ProgressWrapper /></ProtectedRoute> },
-      { path: "courses/:kelasId/materials", element: <ProtectedRoute requiredRole="user"><MaterialWrapper /></ProtectedRoute> },
-      { path: "courses/:kelasId/materials/:materialId", element: <ProtectedRoute requiredRole="user"><DetailMaterialWrapper /></ProtectedRoute> },
-      { path: "courses/:kelasId/materials/:materialId/exam", element: <ProtectedRoute requiredRole="user"><ExamWrapper /></ProtectedRoute> },
-      { path: "history", element: <ProtectedRoute requiredRole="user"><HistoryWrapper /></ProtectedRoute>}
+      {
+        path: "landing",
+        element: (
+          <ProtectedRoute requiredRole="user">
+            <LandingWrapper />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "dashboard",
+        element: (
+          <ProtectedRoute requiredRole="user">
+            <DashboardWrapper />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "courses",
+        element: (
+          <ProtectedRoute requiredRole="user">
+            <CourseWrapper />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "progress",
+        element: (
+          <ProtectedRoute requiredRole="user">
+            <ProgressWrapper />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "courses/:kelasId/materials",
+        element: (
+          <ProtectedRoute requiredRole="user">
+            <MaterialWrapper />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "courses/:kelasId/materials/:materialId",
+        element: (
+          <ProtectedRoute requiredRole="user">
+            <DetailMaterialWrapper />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "courses/:kelasId/materials/:materialId/exam",
+        element: (
+          <ProtectedRoute requiredRole="user">
+            <ExamWrapper />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "courses/:kelasId/materials/:materialId/result/:hasilUjianId",
+        element: (
+          <ProtectedRoute requiredRole="user">
+            <ResultWrapper />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "history",
+        element: (
+          <ProtectedRoute requiredRole="user">
+            <HistoryWrapper />
+          </ProtectedRoute>
+        ),
+      },
     ],
   },
 ];

@@ -45,8 +45,12 @@ export default function ExamPage() {
 
   const handleConfirmSubmit = async () => {
     setShowSubmitAlert(false);
-    const success = await submitExam();
-    if (success) navigate(`/user/courses/${kelasId}/materials`);
+    const result = await submitExam();
+    if (result.success) {
+      navigate(
+        `/user/courses/${kelasId}/materials/${materialId}/result/${result.hasilUjianId}`
+      );
+    }
   };
 
   return (

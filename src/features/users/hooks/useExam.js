@@ -73,16 +73,16 @@ export const useExam = (materiId) => {
       await Promise.all(answerPromises);
 
       // Finish exam
-      await axios.post("/user/hasil-ujian/finish", {
+      const finishRes = await axios.post("/user/hasil-ujian/finish", {
         hasil_ujian_id: hasilUjianId,
       });
 
       toast.success("Ujian berhasil diselesaikan!");
-      return true;
+      return { success: true, hasilUjianId };
     } catch (err) {
       toast.error("Gagal menyimpan jawaban");
       console.error(err);
-      return false;
+      return { success: false };
     } finally {
       setIsSubmitting(false);
     }
