@@ -51,22 +51,27 @@ export const useExam = (materiId) => {
     });
   };
 
-  const submitExam = async () => {
+  const submitExam = async (opts = {}) => {
+    const { allowPartial = false, forceFail = false } = opts;
     if (isSubmitting) {
       console.warn("⚠️ Submit already in progress, ignoring duplicate call");
       return { success: false, error: "Already submitting" };
     }
 
     const unanswered = soalList.filter((s) => !answers[s.id]);
-    if (unanswered.length > 0) {
+    if (!allowPartial && unanswered.length > 0) {
       toast.error(`Masih ada ${unanswered.length} soal yang belum dijawab`);
       return { success: false, error: "Incomplete answers" };
     }
 
     setIsSubmitting(true);
     try {
-      // Submit all answers
-      const answerPromises = soalList.map((soal) =>
+      // Submit only answered items when allowPartial, else submit all (may include undefined)
+      const toSubmit = allowPartial
+        ? soalList.filter((s) => answers[s.id])
+        : soalList;
+
+      const answerPromises = toSubmit.map((soal) =>
         axios.post("/user/jawaban", {
           hasil_ujian_id: hasilUjianId,
           soal_id: soal.id,
@@ -75,15 +80,20 @@ export const useExam = (materiId) => {
       );
       await Promise.all(answerPromises);
 
-      // ✅ Tambah delay kecil sebelum finish (prevent race condition)
+      // small delay to reduce race with answer writes
       await new Promise((resolve) => setTimeout(resolve, 300));
 
-      // Finish exam
+      // Finish exam, pass force_fail flag when requested
       const finishRes = await axios.post("/user/hasil-ujian/finish", {
         hasil_ujian_id: hasilUjianId,
+        force_fail: !!forceFail,
       });
 
-      toast.success("Ujian berhasil diselesaikan!");
+      toast.success(
+        forceFail
+          ? "Waktu habis. Ujian berakhir (gagal)."
+          : "Ujian berhasil diselesaikan!"
+      );
       return { success: true, hasilUjianId };
     } catch (err) {
       toast.error("Gagal menyimpan jawaban");

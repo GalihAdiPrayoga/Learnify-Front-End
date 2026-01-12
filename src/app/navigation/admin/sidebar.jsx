@@ -3,12 +3,10 @@ import { Link, useLocation } from "react-router-dom";
 import Logo from "@/components/logo";
 import {
   LayoutDashboard,
-  Library,
   FileQuestion,
   GraduationCap,
   BookOpen,
   CheckCircle,
-  Settings,
 } from "lucide-react";
 
 export default function Sidebar() {
@@ -21,7 +19,6 @@ export default function Sidebar() {
     { label: "Materi", icon: BookOpen, path: "/admin/materi" },
     { label: "Soal", icon: FileQuestion, path: "/admin/soal" },
     { label: "Hasil Ujian", icon: CheckCircle, path: "/admin/hasil-ujian" },
-    { label: "Settings", icon: Settings, path: "/admin/settings" },
   ];
 
   const isActive = (path) => location.pathname === path;

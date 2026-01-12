@@ -24,10 +24,10 @@ export const companies = [
 ];
 
 export const stats = [
-  { number: "1000", label: "Active Students", icon: Users },
-  { number: "25", label: "Expert Instructors", icon: UserCheck },
-  { number: "10", label: "Courses Available", icon: BookOpen },
-  { number: "95%", label: "Success Rate", icon: Award },
+  { number: "1000", label: "Siswa Aktif", icon: Users },
+  { number: "25", label: "Instruktur Ahli", icon: UserCheck },
+  { number: "10", label: "Kursus Tersedia", icon: BookOpen },
+  { number: "95%", label: "Tingkat Keberhasilan", icon: Award },
 ];
 
 export const learningPaths = [
@@ -35,7 +35,7 @@ export const learningPaths = [
     title: "Web Development",
     duration: "6 Bulan",
     courses: 12,
-    level: "Beginner to Advanced",
+    level: "Pemula hingga Lanjutan",
     icon: Code,
     color: "from-blue-500 to-cyan-500",
     skills: ["HTML/CSS", "JavaScript", "React", "Node.js"],
@@ -44,7 +44,7 @@ export const learningPaths = [
     title: "Data Science",
     duration: "8 Bulan",
     courses: 15,
-    level: "Intermediate",
+    level: "Menengah",
     icon: BarChart3,
     color: "from-purple-500 to-pink-500",
     skills: ["Python", "Statistics", "ML", "Data Viz"],
@@ -53,7 +53,7 @@ export const learningPaths = [
     title: "Mobile Development",
     duration: "5 Bulan",
     courses: 10,
-    level: "Beginner to Advanced",
+    level: "Pemula hingga Lanjutan",
     icon: Smartphone,
     color: "from-green-500 to-emerald-500",
     skills: ["React Native", "Flutter", "iOS", "Android"],
@@ -62,7 +62,7 @@ export const learningPaths = [
     title: "Cloud & DevOps",
     duration: "4 Bulan",
     courses: 8,
-    level: "Advanced",
+    level: "Lanjutan",
     icon: Globe,
     color: "from-orange-500 to-red-500",
     skills: ["AWS", "Docker", "Kubernetes", "CI/CD"],
@@ -70,12 +70,12 @@ export const learningPaths = [
 ];
 
 export const categories = [
-  { name: "Web Development", courses: 125, icon: Code },
-  { name: "Mobile Apps", courses: 89, icon: Smartphone },
+  { name: "Pengembangan Web", courses: 125, icon: Code },
+  { name: "Aplikasi Mobile", courses: 89, icon: Smartphone },
   { name: "Data Science", courses: 67, icon: TrendingUp },
-  { name: "Design & UI/UX", courses: 54, icon: Layers },
-  { name: "Business", courses: 78, icon: Target },
-  { name: "Languages", courses: 92, icon: Globe },
+  { name: "Desain & UI/UX", courses: 54, icon: Layers },
+  { name: "Bisnis", courses: 78, icon: Target },
+  { name: "Bahasa", courses: 92, icon: Globe },
 ];
 
 export const features = [

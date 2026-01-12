@@ -24,7 +24,7 @@ export default function HistoryChart({ history }) {
   ];
 
   return (
-    <div className="relative w-full h-64 flex items-end justify-around px-4 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-6 border border-gray-200">
+    <div className="relative w-full h-64 flex items-end justify-around px-4 bg-linear-to-br from-gray-50 to-gray-100 rounded-xl p-6 border border-gray-200">
       {buckets.map((count, i) => {
         const heightPercent = maxBucket > 0 ? (count / maxBucket) * 100 : 0;
         const isHovered = hoveredBar === i;

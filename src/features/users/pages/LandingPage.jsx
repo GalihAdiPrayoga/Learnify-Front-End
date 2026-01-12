@@ -15,7 +15,7 @@ export default function LandingPage() {
       <HeroSection />
       {/* <TrustedCompanies /> */}
       <StatsSection />
-      <LearningPaths />
+      {/* <LearningPaths /> */}
       {/* <CategoriesSection /> */}
       <FeaturesSection />
       <FAQSection />

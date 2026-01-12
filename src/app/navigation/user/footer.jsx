@@ -4,19 +4,19 @@ import { Facebook, Twitter, Linkedin, Instagram } from "lucide-react";
 
 const FOOTER_LINKS = {
   courses: [
-    { label: "Browse All", href: "#" },
-    { label: "Popular", href: "#" },
-    { label: "New Releases", href: "#" },
+    { label: "Telusuri Semua", href: "#" },
+    { label: "Populer", href: "#" },
+    { label: "Rilisan Baru", href: "#" },
   ],
   company: [
-    { label: "About Us", href: "#" },
-    { label: "Contact", href: "#" },
+    { label: "Tentang Kami", href: "#" },
+    { label: "Kontak", href: "#" },
     { label: "Blog", href: "#" },
   ],
   legal: [
-    { label: "Privacy Policy", href: "#" },
-    { label: "Terms & Conditions", href: "#" },
-    { label: "Cookie Policy", href: "#" },
+    { label: "Kebijakan Privasi", href: "#" },
+    { label: "Syarat & Ketentuan", href: "#" },
+    { label: "Kebijakan Cookie", href: "#" },
   ],
 };
 
@@ -37,7 +37,8 @@ export default function Footer() {
           <div className="sm:col-span-2 lg:col-span-1">
             <Logo to="/user/landing" size="md" showText={true} />
             <p className="text-gray-400 text-sm mt-4">
-              Empowering learners worldwide with quality education.
+              Memberdayakan pelajar di seluruh dunia dengan pendidikan
+              berkualitas.
             </p>
 
             {/* Social Links */}
@@ -60,7 +61,7 @@ export default function Footer() {
 
           {/* Courses Links */}
           <div>
-            <h4 className="font-semibold mb-4 text-sm md:text-base">Courses</h4>
+            <h4 className="font-semibold mb-4 text-sm md:text-base">Kursus</h4>
             <ul className="space-y-2">
               {FOOTER_LINKS.courses.map((link) => (
                 <li key={link.label}>
@@ -77,7 +78,9 @@ export default function Footer() {
 
           {/* Company Links */}
           <div>
-            <h4 className="font-semibold mb-4 text-sm md:text-base">Company</h4>
+            <h4 className="font-semibold mb-4 text-sm md:text-base">
+              Perusahaan
+            </h4>
             <ul className="space-y-2">
               {FOOTER_LINKS.company.map((link) => (
                 <li key={link.label}>
@@ -113,8 +116,7 @@ export default function Footer() {
         {/* Divider */}
         <div className="border-t border-zinc-700 py-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-center md:text-left text-gray-400 text-xs md:text-sm">
-            <p>&copy; 2024 Learning Hub. All rights reserved.</p>
-          
+            <p>&copy; 2024 Learning Hub. Semua hak dilindungi.</p>
           </div>
         </div>
       </div>

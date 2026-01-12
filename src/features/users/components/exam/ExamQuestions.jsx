@@ -72,16 +72,16 @@ export default function ExamQuestions({
                   key={opt}
                   type="button"
                   onClick={() => onSelect(soal.id, opt)}
-                  className={`w-full text-left p-4 rounded-lg transition-all flex items-start gap-3 ${
+                  className={`w-full text-left p-4 rounded-lg transition-all flex items-start gap-3 overflow-hidden ${
                     selected
-                      ? "bg-indigo-600 text-white shadow-sm"
+                      ? "bg-linear-to-r from-indigo-600 via-indigo-700 to-blue-900 text-white shadow-md"
                       : "bg-white border border-gray-200 hover:shadow-sm"
                   }`}
                 >
                   <div
                     className={`w-8 h-8 rounded-full flex items-center justify-center font-semibold ${
                       selected
-                        ? "bg-white text-indigo-600"
+                        ? "bg-white/10 text-white ring-1 ring-white/20 backdrop-blur-sm"
                         : "bg-gray-100 text-gray-700"
                     }`}
                   >

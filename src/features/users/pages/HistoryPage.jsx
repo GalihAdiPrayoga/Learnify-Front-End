@@ -4,7 +4,7 @@ import { hasilUjianApi } from "@/services/api/hasilujian.api";
 import Loading from "@/components/Loading";
 import CardHeader from "../components/CardHeader";
 import Button from "@/components/button";
-import { FileText, Trophy } from "lucide-react";
+import { BookOpenCheck, Eye, FileText, Trophy } from "lucide-react";
 import { motion } from "framer-motion";
 import NotFound from "@/features/error/notfound";
 import HistoryStatsCard from "../components/history/HistoryStatsCard";
@@ -96,7 +96,7 @@ const HistoryPage = () => {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.05 }}
-                className="bg-white p-6 rounded-lg shadow-md border flex items-center justify-between"
+                className="bg-white p-6 rounded-lg shadow-md border-gray-400 flex items-center justify-between"
               >
                 <div className="flex items-center gap-4">
                   <div
@@ -104,7 +104,7 @@ const HistoryPage = () => {
                       passed ? "bg-green-100" : "bg-red-100"
                     }`}
                   >
-                    <Trophy
+                    <BookOpenCheck
                       className={passed ? "text-green-600" : "text-red-600"}
                       size={24}
                     />
@@ -139,9 +139,10 @@ const HistoryPage = () => {
                       `/user/courses/${hasil.materi?.kelas_id}/materials/${hasil.materi_id}/result/${hasil.id}`
                     )
                   }
-                  className="flex items-center gap-2"
+                  className="p-2 h-9 w-9 rounded-full border border-gray-200 bg-white text-indigo-600 shadow-sm hover:bg-indigo-50 hover:shadow focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                  title="Lihat Hasil"
                 >
-                  <FileText size={16} /> Detail
+                  <Eye size={16} />
                 </Button>
               </motion.div>
             );

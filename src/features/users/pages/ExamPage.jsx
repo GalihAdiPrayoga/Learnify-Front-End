@@ -43,16 +43,72 @@ export default function ExamPage() {
     setShowSubmitAlert(true);
   };
 
+  // auto submit handler called from sidebar when timer reaches 0
+  const handleAutoSubmit = async () => {
+    if (isSubmitting) return;
+    setShowSubmitAlert(false);
+
+    // scroll to top before submitting
+    if (typeof window !== "undefined") {
+      try {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } catch {
+        window.scrollTo(0, 0);
+      }
+    }
+
+    // allow partial answers and mark as failed because time expired
+    const result = await submitExam({ allowPartial: true, forceFail: true });
+    if (result?.success) {
+      navigate(
+        `/user/courses/${kelasId}/materials/${materialId}/result/${result.hasilUjianId}`
+      );
+      setTimeout(() => {
+        if (typeof window !== "undefined") {
+          try {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          } catch {
+            window.scrollTo(0, 0);
+          }
+        }
+      }, 80);
+    }
+  };
+
   const handleConfirmSubmit = async () => {
     if (isSubmitting) return; // guard extra
     setShowSubmitAlert(false);
+
+    // scroll ke atas saat mulai submit
+    if (typeof window !== "undefined") {
+      try {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } catch {
+        window.scrollTo(0, 0);
+      }
+    }
+
     const result = await submitExam();
     if (result?.success) {
       navigate(
         `/user/courses/${kelasId}/materials/${materialId}/result/${result.hasilUjianId}`
       );
+      // pastikan page result juga berada di atas setelah navigasi
+      setTimeout(() => {
+        if (typeof window !== "undefined") {
+          try {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          } catch {
+            window.scrollTo(0, 0);
+          }
+        }
+      }, 80);
     }
   };
+
+  // duration: 1 soal = 60 detik. Jika tidak ada soal, gunakan null (tidak tampilkan timer)
+  const durationSeconds =
+    (soalList?.length || 0) > 0 ? soalList.length * 60 : null;
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
@@ -79,6 +135,8 @@ export default function ExamPage() {
           answers={answers}
           isSubmitting={isSubmitting}
           onSubmit={handleSubmitClick}
+          durationSeconds={durationSeconds}
+          onAutoSubmit={handleAutoSubmit}
         />
       </div>
 

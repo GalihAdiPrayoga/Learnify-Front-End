@@ -3,19 +3,19 @@
  */
 export const USER_NAV_ITEMS = [
   {
-    label: "Home",
+    label: "Beranda",
     path: "/user/landing",
   },
   {
-    label: "Courses",
+    label: "Kursus",
     path: "/user/courses",
   },
   {
-    label: "Progress",
+    label: "Kemajuan",
     path: "/user/progress",
     children: [
       { label: "Materi", path: "/user/progress" },
-      { label: "Exam", path: "/user/history" },
+      { label: "Ujian", path: "/user/history" },
     ],
   },
 ];
@@ -25,27 +25,27 @@ export const USER_NAV_ITEMS = [
  */
 export const ADMIN_NAV_ITEMS = [
   {
-    label: "Dashboard",
+    label: "Dasbor",
     path: "/admin/dashboard",
   },
   {
-    label: "Settings",
+    label: "Pengaturan",
     path: "/admin/settings",
   },
   {
-    label: "Classes",
+    label: "Kelas",
     path: "/admin/kelas",
   },
   {
-    label: "Materials",
+    label: "Materi",
     path: "/admin/materi",
   },
   {
-    label: "Questions",
+    label: "Soal",
     path: "/admin/soal",
   },
   {
-    label: "Results",
+    label: "Hasil Ujian",
     path: "/admin/hasil-ujian",
   },
 ];
@@ -56,11 +56,11 @@ export const ADMIN_NAV_ITEMS = [
 export const LOGO_CONFIG = {
   light: {
     url: "https://via.placeholder.com/40",
-    alt: "LMS Logo",
+    alt: "Logo LMS",
   },
   dark: {
     url: "https://via.placeholder.com/40?bg=000&fg=fff",
-    alt: "LMS Logo Dark",
+    alt: "Logo LMS Gelap",
   },
 };
 

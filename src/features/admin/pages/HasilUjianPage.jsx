@@ -1,63 +1,104 @@
+import { useState, useEffect, useMemo } from "react";
+import { useHasilUjian } from "../hooks/useHasilUjian";
+import { HasilUjianColumns } from "../config/HasilUjianConfig";
+import Loading from "@/components/Loading";
+import NotFound from "@/features/error/notfound";
+import HeaderCard from "../components/HeaderCard";
+import HasilUjianToolbar from "../components/hasilujian/HasilUjianToolbar";
+import HasilUjianTableSection from "../components/hasilujian/HasilUjianTableSection";
+
 export default function HasilUjianPage() {
-  const results = [
-    {
-      id: 1,
-      student: "John Doe",
-      exam: "React Quiz",
-      score: 85,
-      date: "2024-01-25",
-    },
-    {
-      id: 2,
-      student: "Jane Smith",
-      exam: "JavaScript Test",
-      score: 92,
-      date: "2024-01-26",
-    },
-    {
-      id: 3,
-      student: "Bob Wilson",
-      exam: "Python Exam",
-      score: 78,
-      date: "2024-01-27",
-    },
-  ];
+  const { hasilList, loading, error, deleteHasil } = useHasilUjian();
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+
+  const handleSearch = (term) => {
+    setSearchTerm(term);
+    setCurrentPage(1);
+  };
+
+  const filteredList = useMemo(() => {
+    if (!searchTerm) return hasilList;
+    const term = searchTerm.toLowerCase();
+    return hasilList.filter((h) => {
+      return (
+        h.user?.name?.toLowerCase().includes(term) ||
+        h.materi?.judul?.toLowerCase().includes(term)
+      );
+    });
+  }, [hasilList, searchTerm]);
+
+  const sortedList = useMemo(() => {
+    return (filteredList || []).slice().sort((a, b) => {
+      return Number(b?.id ?? 0) - Number(a?.id ?? 0);
+    });
+  }, [filteredList]);
+
+  const totalPages = Math.ceil(sortedList.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const displayed = sortedList.slice(startIndex, startIndex + itemsPerPage);
+
+  const tableData = (displayed || []).map((row, idx) => ({
+    ...row,
+    __no: startIndex + idx + 1,
+    user_name: row.user?.name || "-",
+    materi_judul: row.materi?.judul || "-",
+    tanggal: new Date(row.created_at).toLocaleDateString("id-ID", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    }),
+  }));
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
 
   return (
     <div className="p-6">
-      <h1 className="text-4xl font-bold mb-6">Exam Results</h1>
-      <div className="bg-white rounded-lg shadow-md overflow-hidden">
-        <table className="w-full">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="px-6 py-3 text-left">Student</th>
-              <th className="px-6 py-3 text-left">Exam</th>
-              <th className="px-6 py-3 text-left">Score</th>
-              <th className="px-6 py-3 text-left">Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            {results.map((result) => (
-              <tr key={result.id} className="border-t">
-                <td className="px-6 py-3">{result.student}</td>
-                <td className="px-6 py-3">{result.exam}</td>
-                <td className="px-6 py-3">
-                  <span
-                    className={`px-2 py-1 rounded text-sm ${
-                      result.score >= 80
-                        ? "bg-green-100 text-green-800"
-                        : "bg-yellow-100 text-yellow-800"
-                    }`}
-                  >
-                    {result.score}%
-                  </span>
-                </td>
-                <td className="px-6 py-3">{result.date}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <HeaderCard
+        title="Hasil Ujian Management"
+        subtitle="Kelola data hasil ujian siswa"
+        showBack={false}
+      />
+
+      <HasilUjianToolbar
+        searchTerm={searchTerm}
+        onSearch={handleSearch}
+        itemsPerPage={itemsPerPage}
+        onItemsPerPageChange={(val) => {
+          setItemsPerPage(val);
+          setCurrentPage(1);
+        }}
+      />
+
+      {loading ? (
+        <Loading />
+      ) : error ? (
+        <NotFound
+          title="Gagal Memuat Data"
+          message={error || "Terjadi kesalahan saat mengambil data hasil ujian"}
+          type="error"
+          onRetry={() => window.location.reload()}
+        />
+      ) : (
+        <HasilUjianTableSection
+          columns={HasilUjianColumns}
+          data={tableData}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalItems={sortedList.length}
+          itemsPerPage={itemsPerPage}
+          onPageChange={setCurrentPage}
+          onItemsPerPageChange={(val) => {
+            setItemsPerPage(val);
+            setCurrentPage(1);
+          }}
+          onDelete={deleteHasil}
+        />
+      )}
     </div>
   );
 }

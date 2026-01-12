@@ -6,26 +6,30 @@ const ProgressStats = ({ total, completed, average }) => {
   const stats = [
     {
       icon: BookOpen,
-      label: "Total Kelas",
+      label: "Total Ujian",
       value: total,
-      gradient: "bg-gradient-to-br from-blue-500 to-blue-600",
-      iconBg: "bg-white/20",
+      gradient: "bg-gradient-to-br from-indigo-600 via-indigo-700 to-blue-900",
+      iconBg: "bg-blue-300",
+      iconColor: "text-blue-600",
       textColor: "text-white",
     },
     {
       icon: Trophy,
-      label: "Selesai",
+      label: "Lulus",
       value: completed,
-      gradient: "bg-gradient-to-br from-green-500 to-green-600",
-      iconBg: "bg-white/20",
+      gradient: "bg-gradient-to-br from-green-600 via-green-700 to-emerald-900",
+      iconBg: "bg-green-100",
+      iconColor: "text-green-600",
       textColor: "text-white",
     },
     {
       icon: TrendingUp,
       label: "Rata-rata Progress",
       value: `${average}%`,
-      gradient: "bg-gradient-to-br from-purple-500 to-purple-600",
-      iconBg: "bg-white/20",
+      gradient:
+        "bg-gradient-to-br from-purple-600 via-purple-700 to-violet-950",
+      iconBg: "bg-purple-100",
+      iconColor: "text-purple-600",
       textColor: "text-white",
     },
   ];
@@ -44,13 +48,10 @@ const ProgressStats = ({ total, completed, average }) => {
             className={`rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow ${stat.gradient}`}
           >
             <div className="flex items-center gap-4">
-              <motion.div
-                whileHover={{ rotate: 360 }}
-                transition={{ duration: 0.6 }}
-                className={`p-3 rounded-xl ${stat.iconBg}`}
-              >
-                <Icon className={`w-6 h-6 ${stat.textColor}`} />
-              </motion.div>
+              <div className={`p-3 rounded-xl ${stat.iconBg}`}>
+                <Icon className={`w-6 h-6 ${stat.iconColor}`} />
+              </div>
+
               <div>
                 <div
                   className={`text-sm font-medium ${stat.textColor} opacity-90`}

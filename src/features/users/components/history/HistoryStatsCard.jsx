@@ -7,15 +7,15 @@ export default function HistoryStatsCard({ total, passed, average }) {
       icon: BookOpen,
       label: "Total Ujian",
       value: total,
-      gradient: "from-blue-500 via-blue-600 to-blue-700",
-      iconBg: "bg-blue-100",
+      gradient: "from-indigo-600 via-indigo-700 to-blue-900",
+      iconBg: "bg-blue-300",
       iconColor: "text-blue-600",
     },
     {
       icon: Trophy,
       label: "Lulus",
       value: passed,
-      gradient: "from-green-500 via-green-600 to-green-700",
+      gradient: "from-green-600 via-green-700 to-emerald-900",
       iconBg: "bg-green-100",
       iconColor: "text-green-600",
     },
@@ -23,7 +23,7 @@ export default function HistoryStatsCard({ total, passed, average }) {
       icon: TrendingUp,
       label: "Rata-rata",
       value: average,
-      gradient: "from-purple-500 via-purple-600 to-purple-700",
+      gradient: "from-purple-600 via-purple-700 to-violet-950",
       iconBg: "bg-purple-100",
       iconColor: "text-purple-600",
     },
@@ -40,7 +40,7 @@ export default function HistoryStatsCard({ total, passed, average }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1 }}
             whileHover={{ y: -4, boxShadow: "0 12px 24px rgba(0,0,0,0.15)" }}
-            className={`relative overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all bg-gradient-to-br ${stat.gradient} p-6`}
+            className={`relative overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all bg-linear-to-br ${stat.gradient} p-6`}
           >
             {/* Overlay pattern */}
             <div className="absolute inset-0 opacity-10">
@@ -54,13 +54,10 @@ export default function HistoryStatsCard({ total, passed, average }) {
             </div>
 
             <div className="relative flex items-center gap-4">
-              <motion.div
-                whileHover={{ rotate: 360, scale: 1.1 }}
-                transition={{ duration: 0.6 }}
-                className={`p-3 rounded-xl ${stat.iconBg} shadow-md`}
-              >
+              <div className={`p-3 rounded-xl ${stat.iconBg} shadow-md`}>
                 <Icon className={`w-6 h-6 ${stat.iconColor}`} />
-              </motion.div>
+              </div>
+
               <div>
                 <div className="text-sm text-white/90 font-medium">
                   {stat.label}

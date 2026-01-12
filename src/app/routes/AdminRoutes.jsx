@@ -16,7 +16,7 @@ const MateriPage = React.lazy(() =>
   import("@/features/admin/pages/MateriPage")
 );
 const HasilUjian = React.lazy(() =>
-  import("@/features/admin/pages/HasilUjian")
+  import("@/features/admin/pages/HasilUjianPage")
 );
 const MateriFormPage = React.lazy(() =>
   import("@/features/admin/form/MateriFormPage")
