@@ -27,6 +27,7 @@
     "react-router-dom": "^7.9.6",
     "react-syntax-highlighter": "^16.1.0",
     "react-toastify": "^11.0.5",
+    "recharts": "^3.6.0",
     "router-dom": "^3.0.3",
     "tailwindcss": "^4.1.17",
     "toastr": "^2.1.4"
